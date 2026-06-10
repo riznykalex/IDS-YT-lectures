@@ -235,22 +235,30 @@
       youtubeBtn.onclick = () => window.open(video.url, '_blank');
 
       if (video.textFile) {
-        fetch(`${baseUrl}/texts/${video.textFile}`)
+        // Важливо: правильно кодуємо назву файлу
+        const encodedFileName = encodeURIComponent(video.textFile);
+        const baseUrl = window.location.origin;
+        
+        fetch(`${baseUrl}/texts/${encodedFileName}`)
           .then(res => {
-            if (!res.ok) throw new Error();
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
             return res.text();
           })
           .then(text => {
             textEl.textContent = text;
           })
-          .catch(() => {
-            textEl.innerHTML = `<span style="color:red;">Не вдалося завантажити текст.<br>Файл: ${video.textFile}</span>`;
+          .catch(err => {
+            console.error(err);
+            textEl.innerHTML = `<span style="color:red;">
+              Не вдалося завантажити текст.<br>
+              Файл: ${video.textFile}<br>
+              <small>Спробуйте відкрити за прямим посиланням</small>
+            </span>`;
           });
       } else {
         textEl.textContent = "Текст для цієї лекції ще не додано.";
       }
     }
-
     function closeModal() {
       document.getElementById('textModal').style.display = 'none';
     }
