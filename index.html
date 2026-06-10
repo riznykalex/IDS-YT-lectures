@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="uk">
 <head>
   <meta charset="UTF-8">
@@ -201,7 +201,7 @@
     let videos = [];
     const itemsPerPage = 12;
     let currentPage = 1;
-
+    const baseUrl = window.location.origin;
     const jsonUrl = 'https://raw.githubusercontent.com/riznykalex/IDS-YT-lectures/refs/heads/main/videos_cache.json';
 
     async function loadVideos() {
@@ -235,7 +235,7 @@
       youtubeBtn.onclick = () => window.open(video.url, '_blank');
 
       if (video.textFile) {
-        fetch(`texts/${video.textFile}`)
+        fetch(`${baseUrl}/texts/${video.textFile}`)
           .then(res => {
             if (!res.ok) throw new Error();
             return res.text();
@@ -289,7 +289,7 @@
                   Get text
                 </button>
               ` : `
-                <button class="get-text-btn" disabled>Текст скоро</button>
+                <button class="get-text-btn" disabled>Text soon</button>
               `}
             </div>
             
