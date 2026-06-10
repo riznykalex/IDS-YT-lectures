@@ -183,11 +183,11 @@
   <h1>Indradyumna Swami's lectures (from Youtube subtitles)</h1>
 
   <div class="controls">
-    <input type="text" id="search" class="search" placeholder="Пошук за назвою...">
+    <input type="text" id="search" class="search" placeholder="Search by title...">
     <div class="toggle">
       <label>
         <input type="checkbox" id="englishOnly" checked>
-        Показувати <strong>тільки англійські</strong> назви
+        Show <strong>English titles only</strong>
       </label>
     </div>
   </div>
@@ -203,12 +203,12 @@
         <span class="close-btn" onclick="closeModal()">×</span>
       </div>
       
-      <div id="modalText" class="modal-text">Завантаження тексту...</div>
+      <div id="modalText" class="modal-text">Loading text...</div>
       
       <div class="modal-controls">
-        <button onclick="closeModal()">Закрити</button>
-        <button class="copy-btn" id="copyTextBtn" onclick="copyModalText()">📋 Копіювати текст</button>
-        <button id="youtubeModalBtn">▶ Відкрити на YouTube</button>
+        <button onclick="closeModal()">Close</button>
+        <button class="copy-btn" id="copyTextBtn" onclick="copyModalText()">📋 Copy text</button>
+        <button id="youtubeModalBtn">▶ Open on YouTube</button>
       </div>
     </div>
   </div>
@@ -226,7 +226,7 @@
         videos = await res.json();
         renderPage();
       } catch (e) {
-        document.getElementById('videoGrid').innerHTML = `<p style="text-align:center;color:red;">Не вдалося завантажити JSON</p>`;
+        document.getElementById('videoGrid').innerHTML = `<p style="text-align:center;color:red;">Failed to load JSON</p>`;
       }
     }
 
@@ -245,7 +245,7 @@
       const youtubeBtn = document.getElementById('youtubeModalBtn');
 
       titleEl.textContent = video.title;
-      textEl.innerHTML = "Завантаження тексту...";
+      textEl.innerHTML = "Loading text...";
       modal.style.display = 'block';
 
       youtubeBtn.onclick = () => window.open(video.url, '_blank');
@@ -265,14 +265,14 @@
           .catch(err => {
             console.error(err);
             textEl.innerHTML = `<span style="color:red;">
-              Не вдалося завантажити текст.<br>
-              Файл: ${video.textFile}<br>
-              <small>Перевірте правильність назви файлу</small>
+              Failed to load text.<br>
+              File: ${video.textFile}<br>
+              <small>Check the file name</small>
             </span>`;
           });
       } else {
         _currentPlainText = '';
-        textEl.innerHTML = "Текст для цієї лекції ще не додано.";
+        textEl.innerHTML = "No text added for this lecture yet.";
       }
     }
 
@@ -289,10 +289,10 @@
     function copyModalText() {
       const btn = document.getElementById('copyTextBtn');
       navigator.clipboard.writeText(_currentPlainText).then(() => {
-        btn.textContent = '✓ Скопійовано!';
+        btn.textContent = '✓ Copied!';
         btn.classList.add('copied');
         setTimeout(() => {
-          btn.textContent = '📋 Копіювати текст';
+          btn.textContent = '📋 Copy text';
           btn.classList.remove('copied');
         }, 2000);
       }).catch(() => {
@@ -303,10 +303,10 @@
         ta.select();
         document.execCommand('copy');
         document.body.removeChild(ta);
-        btn.textContent = '✓ Скопійовано!';
+        btn.textContent = '✓ Copied!';
         btn.classList.add('copied');
         setTimeout(() => {
-          btn.textContent = '📋 Копіювати текст';
+          btn.textContent = '📋 Copy text';
           btn.classList.remove('copied');
         }, 2000);
       });
@@ -350,7 +350,7 @@
                   Get text
                 </button>
               ` : `
-                <button class="get-text-btn" disabled>Текст скоро</button>
+                <button class="get-text-btn" disabled>Coming soon</button>
               `}
             </div>
             
