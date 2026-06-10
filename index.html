@@ -142,17 +142,24 @@
     }
     .modal-controls {
       margin-top: 20px;
-      text-align: center;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
     }
     .modal-controls button {
       border: none;
-      padding: 8px 16px;
-      border-radius: 6px;
+      padding: 10px 20px;
+      border-radius: 8px;
       font-size: 14px;
+      font-weight: 500;
       cursor: pointer;
-      margin: 0 5px;
+      flex: 1 1 120px;
+      max-width: 200px;
+      min-width: 100px;
       background: #e0e0e0;
       color: #333;
+      transition: background 0.15s;
     }
     .modal-controls button:hover { background: #bdbdbd; }
     #copyTextBtn { background: #43a047; color: white; }
