@@ -144,6 +144,18 @@
       margin-top: 20px;
       text-align: center;
     }
+    .copy-btn {
+      background: #43a047;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      margin: 0 5px;
+    }
+    .copy-btn:hover { background: #2e7d32; }
+    .copy-btn.copied { background: #888; }
 
     .pagination {
       text-align: center;
@@ -191,6 +203,7 @@
       
       <div class="modal-controls">
         <button onclick="closeModal()">Закрити</button>
+        <button class="copy-btn" id="copyTextBtn" onclick="copyModalText()">📋 Копіювати текст</button>
         <button id="youtubeModalBtn">▶ Відкрити на YouTube</button>
       </div>
     </div>
@@ -228,7 +241,7 @@
       const youtubeBtn = document.getElementById('youtubeModalBtn');
 
       titleEl.textContent = video.title;
-      textEl.textContent = "Завантаження тексту...";
+      textEl.innerHTML = "Завантаження тексту...";
       modal.style.display = 'block';
 
       youtubeBtn.onclick = () => window.open(video.url, '_blank');
@@ -243,7 +256,7 @@
             return res.text();
           })
           .then(text => {
-            textEl.textContent = text;
+            textEl.innerHTML = renderTextWithItalics(text);
           })
           .catch(err => {
             console.error(err);
@@ -254,15 +267,50 @@
             </span>`;
           });
       } else {
-        textEl.textContent = "Текст для цієї лекції ще не додано.";
+        _currentPlainText = '';
+        textEl.innerHTML = "Текст для цієї лекції ще не додано.";
       }
+    }
+
+    // Перетворює *слово* на курсив і зберігає plain text для копіювання
+    let _currentPlainText = '';
+
+    function renderTextWithItalics(text) {
+      _currentPlainText = text;
+      // Екранування HTML, потім заміна *...* на <em>
+      const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      return escaped.replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
+    }
+
+    function copyModalText() {
+      const btn = document.getElementById('copyTextBtn');
+      navigator.clipboard.writeText(_currentPlainText).then(() => {
+        btn.textContent = '✓ Скопійовано!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = '📋 Копіювати текст';
+          btn.classList.remove('copied');
+        }, 2000);
+      }).catch(() => {
+        // Fallback для старих браузерів
+        const ta = document.createElement('textarea');
+        ta.value = _currentPlainText;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        btn.textContent = '✓ Скопійовано!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = '📋 Копіювати текст';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
     }
 
     function closeModal() {
       document.getElementById('textModal').style.display = 'none';
     }
-
-    function renderPage() {
       const searchTerm = document.getElementById('search').value.toLowerCase();
       const englishOnly = document.getElementById('englishOnly').checked;
 
