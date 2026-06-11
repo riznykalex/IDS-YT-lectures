@@ -191,7 +191,7 @@
 
   <div class="controls">
     <input type="text" id="search" class="search" placeholder="Search by title...">
-    <div class="toggle" style="display:flex; gap:20px; justify-content:center; flex-wrap:wrap;">
+    <div class="toggle" style="display:flex; gap:20px; justify-content:center; flex-wrap:wrap; align-items:center;">
       <label>
         <input type="checkbox" id="englishOnly" checked>
         <strong>English titles only</strong>
@@ -199,6 +199,19 @@
       <label>
         <input type="checkbox" id="withTextOnly">
         <strong>With text only</strong>
+      </label>
+      <label style="display:flex; align-items:center; gap:6px;">
+        Sort A→Z
+        <button id="sortBtn" onclick="toggleSort()" title="Toggle sort order" style="
+          border: 1px solid #ccc;
+          background: white;
+          border-radius: 6px;
+          width: 30px; height: 30px;
+          font-size: 16px;
+          cursor: pointer;
+          line-height: 1;
+          padding: 0;
+        ">↑</button>
       </label>
     </div>
   </div>
@@ -327,10 +340,22 @@
       document.getElementById('textModal').style.display = 'none';
     }
 
+    let sortAsc = true;
+
+    function toggleSort() {
+      sortAsc = !sortAsc;
+      const btn = document.getElementById('sortBtn');
+      btn.textContent = sortAsc ? '↑' : '↓';
+      currentPage = 1;
+      renderPage();
+    }
+
     function resetToHome() {
       document.getElementById('search').value = '';
       document.getElementById('englishOnly').checked = true;
       document.getElementById('withTextOnly').checked = false;
+      sortAsc = true;
+      document.getElementById('sortBtn').textContent = '↑';
       currentPage = 1;
       renderPage();
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -347,6 +372,11 @@
         const hasText = !!v.textFile && v.textFile.trim() !== "";
         return matchesSearch && (!englishOnly || isEnglish) && (!withTextOnly || hasText);
       });
+
+      filtered.sort((a, b) => sortAsc
+        ? a.title.localeCompare(b.title)
+        : b.title.localeCompare(a.title)
+      );
 
       const totalPages = Math.ceil(filtered.length / itemsPerPage);
       const start = (currentPage - 1) * itemsPerPage;
