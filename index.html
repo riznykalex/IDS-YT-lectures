@@ -374,8 +374,8 @@
       });
 
       filtered.sort((a, b) => sortAsc
-        ? a.title.localeCompare(b.title)
-        : b.title.localeCompare(a.title)
+        ? a.title.localeCompare(b.title, undefined, { sensitivity: 'base' })
+        : b.title.localeCompare(a.title, undefined, { sensitivity: 'base' })
       );
 
       const totalPages = Math.ceil(filtered.length / itemsPerPage);
