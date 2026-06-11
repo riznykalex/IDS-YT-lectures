@@ -342,6 +342,10 @@
 
     let sortAsc = true;
 
+    function sortKey(title) {
+      return title.replace(/^[\s\u200B\uFEFF\u00A0]+/, '').replace(/^(a |the )/i, '').trim();
+    }
+
     function toggleSort() {
       sortAsc = !sortAsc;
       const btn = document.getElementById('sortBtn');
@@ -374,8 +378,8 @@
       });
 
       filtered.sort((a, b) => sortAsc
-        ? a.title.localeCompare(b.title, undefined, { sensitivity: 'base' })
-        : b.title.localeCompare(a.title, undefined, { sensitivity: 'base' })
+        ? sortKey(a.title).localeCompare(sortKey(b.title), undefined, { sensitivity: 'base' })
+        : sortKey(b.title).localeCompare(sortKey(a.title), undefined, { sensitivity: 'base' })
       );
 
       const totalPages = Math.ceil(filtered.length / itemsPerPage);
