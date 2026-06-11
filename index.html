@@ -187,7 +187,7 @@
   </style>
 </head>
 <body>
-  <h1>Indradyumna Swami's lectures (from Youtube subtitles)</h1>
+  <h1 onclick="resetToHome()" style="cursor:pointer;" title="Reset to home">Indradyumna Swami's lectures (from Youtube subtitles)</h1>
 
   <div class="controls">
     <input type="text" id="search" class="search" placeholder="Search by title...">
@@ -195,6 +195,12 @@
       <label>
         <input type="checkbox" id="englishOnly" checked>
         Show <strong>English titles only</strong>
+      </label>
+    </div>
+    <div class="toggle">
+      <label>
+        <input type="checkbox" id="withTextOnly">
+        Show <strong>with text only</strong>
       </label>
     </div>
   </div>
@@ -323,14 +329,25 @@
       document.getElementById('textModal').style.display = 'none';
     }
 
+    function resetToHome() {
+      document.getElementById('search').value = '';
+      document.getElementById('englishOnly').checked = true;
+      document.getElementById('withTextOnly').checked = false;
+      currentPage = 1;
+      renderPage();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     function renderPage() {
       const searchTerm = document.getElementById('search').value.toLowerCase();
       const englishOnly = document.getElementById('englishOnly').checked;
+      const withTextOnly = document.getElementById('withTextOnly').checked;
 
       let filtered = videos.filter(v => {
         const matchesSearch = v.title.toLowerCase().includes(searchTerm);
         const isEnglish = !hasCyrillic(v.title);
-        return matchesSearch && (!englishOnly || isEnglish);
+        const hasText = !!v.textFile && v.textFile.trim() !== "";
+        return matchesSearch && (!englishOnly || isEnglish) && (!withTextOnly || hasText);
       });
 
       const totalPages = Math.ceil(filtered.length / itemsPerPage);
@@ -398,6 +415,7 @@
     // Події пошуку та фільтра
     document.getElementById('search').addEventListener('input', () => { currentPage = 1; renderPage(); });
     document.getElementById('englishOnly').addEventListener('change', () => { currentPage = 1; renderPage(); });
+    document.getElementById('withTextOnly').addEventListener('change', () => { currentPage = 1; renderPage(); });
 
     // Закриття модалки кліком по фону
     document.getElementById('textModal').addEventListener('click', function(e) {
