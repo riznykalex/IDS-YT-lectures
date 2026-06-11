@@ -343,7 +343,7 @@
     let sortAsc = true;
 
     function sortKey(title) {
-      return title.replace(/^[\s\u200B\uFEFF\u00A0]+/, '').replace(/^(a |the )/i, '').trim();
+      return title.replace(/^[\s\u200B\uFEFF\u00A0"'""'']+/, '').replace(/^(a |the )/i, '').trim();
     }
 
     function toggleSort() {
