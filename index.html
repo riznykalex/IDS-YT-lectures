@@ -255,7 +255,7 @@
     }
 
     function hasCyrillic(text) {
-      return /[а-яА-ЯёЁ]/.test(text);
+      return /[\u0400-\u04FF]/.test(text);
     }
 
     function getThumbnail(id) {
